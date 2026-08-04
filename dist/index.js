@@ -1,6 +1,7 @@
 const corp_select = document.getElementById("corp_select");
 const table = document.getElementById("offers");
 const adjusted_price_checkbox = document.getElementById("adjusted_price");
+const locale = "ru-RU";
 
 const corps = await (await fetch("https://esi.evetech.net/corporations/npccorps")).json();
 /** @type {Array} */
@@ -26,6 +27,11 @@ corp_select.value = localStorage.getItem("corporation");
 /**
  * @typedef {Object} Offer
  * @property {Array} required_items
+ * @property {number} isk_cost
+ * @property {number} lp_cost
+ * @property {number} offer_id
+ * @property {number} quantity
+ * @property {number} type_id
  */
 /**
  * @param {Offer} offer
@@ -68,24 +74,24 @@ async function update_table() {
 			cell.rowSpan = rowspan;
 		}
 		insertCell(offer.type_id);
-		insertCell(offer.quantity);
-		insertCell(offer.lp_cost);
-		insertCell(offer.isk_cost);
+		insertCell(offer.quantity.toLocaleString(locale));
+		insertCell(offer.lp_cost.toLocaleString(locale));
+		insertCell(offer.isk_cost.toLocaleString(locale));
 
 		if (offer.required_items.length == 0) {
 			row.insertCell();
 			row.insertCell();
-			insertCell(get_isk_per_lp(offer));
+			insertCell(get_isk_per_lp(offer).toLocaleString(locale));
 		}
 		offer.required_items.forEach((required_item, i) => {
 			if (i > 0) {
 				table.appendChild(row);
 				row = document.createElement("tr");
 			}
-			row.insertCell().innerText = required_item.type_id;
-			row.insertCell().innerText = required_item.quantity;
+			row.insertCell().innerText = required_item.type_id.toLocaleString(locale);
+			row.insertCell().innerText = required_item.quantity.toLocaleString(locale);
 			if (i == 0) {
-				insertCell(get_isk_per_lp(offer));
+				insertCell(get_isk_per_lp(offer).toLocaleString(locale));
 			}
 		});
 		table.appendChild(row);
