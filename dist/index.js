@@ -1,12 +1,20 @@
 const corp_select = document.getElementById("corp_select");
 const table = document.getElementById("offers");
+const adjusted_price_checkbox = document.getElementById("adjusted_price");
+
 const corps = await (await fetch("https://esi.evetech.net/corporations/npccorps")).json();
 /** @type {Array} */
 const prices_raw = await (await fetch("https://esi.evetech.net/markets/prices")).json();
-const prices = new Map();
-prices_raw.forEach(rawPrice => {
-	prices[rawPrice.type_id] = rawPrice.average_price;
-});
+
+function calculate_prices() {
+	const prices = new Map();
+	prices_raw.forEach(rawPrice => {
+		prices[rawPrice.type_id] = adjusted_price_checkbox.checked ? rawPrice.adjusted_price : rawPrice.average_price;
+	});
+	return prices;
+}
+let prices = calculate_prices();
+
 
 corps.forEach(corp_id => {
 	const corp_option = document.createElement("option");
@@ -34,9 +42,17 @@ function get_isk_per_lp(offer) {
 	return isk_per_lp;
 }
 
-corp_select.addEventListener("change", async e => {
+corp_select.addEventListener("change", async () => {
+	update_table();
+});
+adjusted_price_checkbox.addEventListener("change", async () => {
+	prices = calculate_prices();
+	update_table();
+});
+async function update_table() {
+	const corporation_id = corp_select.value;
 	table.innerHTML = "";
-	const corporation_id = e.target.value;
+	if (!corporation_id) return;
 
 	/** @type {[Offer]} */
 	const offers = await (await fetch(`https://esi.evetech.net/loyalty/stores/${corporation_id}/offers`)).json();
@@ -73,5 +89,4 @@ corp_select.addEventListener("change", async e => {
 		});
 		table.appendChild(row);
 	});
-});
-
+}
