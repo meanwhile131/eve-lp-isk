@@ -21,12 +21,12 @@ corps.forEach(corp_id => {
 	corp_option.innerText = corp_id;
 	corp_select.appendChild(corp_option);
 });
+corp_select.value = localStorage.getItem("corporation");
 
 /**
  * @typedef {Object} Offer
  * @property {Array} required_items
  */
-
 /**
  * @param {Offer} offer
  */
@@ -42,7 +42,8 @@ function get_isk_per_lp(offer) {
 	return isk_per_lp;
 }
 
-corp_select.addEventListener("change", async () => {
+corp_select.addEventListener("change", async e => {
+	localStorage.setItem("corporation", e.target.value);
 	update_table();
 });
 adjusted_price_checkbox.addEventListener("change", async () => {
@@ -90,3 +91,4 @@ async function update_table() {
 		table.appendChild(row);
 	});
 }
+update_table();
