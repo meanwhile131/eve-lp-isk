@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en-US">
+	<head>
+		<meta charset="utf-8" />
+		<title>LP to ISK</title>
+		<link rel="icon" type="image/png" href="https://images.evetech.net/types/29247/icon">
+		<script src="index.js" type="module"></script>
+		<style>
+table {
+	width: 100%;
+}
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+		</style>
+	</head>
+	<body>
+		<select id="corp_select">
+			<option></option>
+		</select>
+		<table id="offers_table">
+			<thead>
+				<tr>
+					<th rowspan="2">ID</th>
+					<th rowspan="2">Quantity</th>
+					<th rowspan="2">LP</th>
+					<th rowspan="2">ISK</th>
+					<th colspan="2">Required items</th>
+					<th rowspan="2">ISK/LP</th>
+				</tr>
+				<tr>
+					<th>ID</th>
+					<th>Count</th>
+				</tr>
+			</thead>
+			<tbody id="offers"></tbody>
+		</table>
+	</body>
+</html>
