@@ -1,3 +1,4 @@
+/** @type {HTMLSelectElement} */
 const corp_select = document.getElementById("corp_select");
 const table = document.getElementById("offers");
 const adjusted_price_checkbox = document.getElementById("adjusted_price");
@@ -14,13 +15,21 @@ function calculate_prices() {
 	return prices;
 }
 let prices = calculate_prices();
+const names = new Map();
 
+
+const new_names = await (await fetch("https://esi.evetech.net/universe/names", {method: "POST", body: JSON.stringify(Array.from(corps))})).json();
+new_names.forEach(new_name => {
+	names[new_name.id] = new_name.name;
+});
 
 corps.forEach(corp_id => {
 	const corp_option = document.createElement("option");
-	corp_option.innerText = corp_id;
+	corp_option.innerText = names[corp_id];
+	corp_option.value = corp_id;
 	corp_select.appendChild(corp_option);
 });
+
 corp_select.value = localStorage.getItem("corporation");
 
 /**
@@ -32,9 +41,7 @@ corp_select.value = localStorage.getItem("corporation");
  * @property {number} quantity
  * @property {number} type_id
  */
-/**
- * @param {Offer} offer
- */
+/** @param {Offer} offer */
 function get_isk_per_lp(offer) {
 	const result_value = prices[offer.type_id] * offer.quantity;
 	let required_items_value = 0;
@@ -62,6 +69,25 @@ async function update_table() {
 
 	/** @type {[Offer]} */
 	const offers = await (await fetch(`https://esi.evetech.net/loyalty/stores/${corporation_id}/offers`)).json();
+	const needed_names = new Set();
+
+	function add_if_missing(type_id) {
+		if (!names.has(type_id)) {
+			needed_names.add(type_id);
+		}
+	}
+	offers.forEach(offer => {
+		add_if_missing(offer.type_id);
+		offer.required_items.forEach(required_item => {
+			add_if_missing(required_item.type_id);
+		});
+	});
+	if (needed_names.size > 0) {
+		const new_names = await (await fetch("https://esi.evetech.net/universe/names", {method: "POST", body: JSON.stringify(Array.from(needed_names))})).json();
+		new_names.forEach(new_name => {
+			names[new_name.id] = new_name.name;
+		});
+	}
 
 	offers.sort((a, b) => get_isk_per_lp(b) - get_isk_per_lp(a));
 	offers.forEach(offer => {
@@ -72,7 +98,7 @@ async function update_table() {
 			cell.innerText = text;
 			cell.rowSpan = rowspan;
 		}
-		insertCell(offer.type_id);
+		insertCell(names[offer.type_id]);
 		insertCell(offer.quantity.toLocaleString());
 		insertCell(offer.lp_cost.toLocaleString());
 		insertCell(offer.isk_cost.toLocaleString());
@@ -87,7 +113,7 @@ async function update_table() {
 				table.appendChild(row);
 				row = document.createElement("tr");
 			}
-			row.insertCell().innerText = required_item.type_id.toLocaleString();
+			row.insertCell().innerText = names[required_item.type_id];
 			row.insertCell().innerText = required_item.quantity.toLocaleString();
 			if (i == 0) {
 				insertCell(get_isk_per_lp(offer).toLocaleString());
