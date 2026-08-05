@@ -3,9 +3,11 @@ const corp_select = document.getElementById("corp_select");
 const table = document.getElementById("offers");
 const adjusted_price_checkbox = document.getElementById("adjusted_price");
 
-const corps = await (await fetch("https://esi.evetech.net/corporations/npccorps")).json();
-/** @type {Array} */
-const prices_raw = await (await fetch("https://esi.evetech.net/markets/prices")).json();
+/** @type {[Array, Array]} */
+const [corps, prices_raw] = await Promise.all([
+	await (await fetch("https://esi.evetech.net/corporations/npccorps")).json(),
+	await (await fetch("https://esi.evetech.net/markets/prices")).json()
+]);
 
 function calculate_prices() {
 	const prices = new Map();
