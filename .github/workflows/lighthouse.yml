@@ -1,0 +1,9 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  lighthouseci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: npm install && npm install -g @lhci/cli@0.15.x
+      - run: lhci autorun
