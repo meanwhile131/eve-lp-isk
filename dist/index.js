@@ -135,7 +135,7 @@ async function update_table() {
 				table.appendChild(row);
 				row = document.createElement("tr");
 			}
-			insertImgCell(offer.type_id, 1);
+			insertImgCell(required_item.type_id, 1);
 			row.insertCell().innerText = names[required_item.type_id];
 			row.insertCell().innerText = required_item.quantity.toLocaleString();
 			row.insertCell().innerText = (prices[required_item.type_id] ?? 0).toLocaleString();
