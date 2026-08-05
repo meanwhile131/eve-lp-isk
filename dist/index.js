@@ -110,9 +110,10 @@ async function update_table() {
 		insertCell(offer.quantity.toLocaleString());
 		insertCell(offer.lp_cost.toLocaleString());
 		insertCell(offer.isk_cost.toLocaleString());
+		insertCell(prices[offer.type_id].toLocaleString());
 
 		if (offer.required_items.length == 0) {
-			for (let i = 0; i < 3; i++)
+			for (let i = 0; i < 4; i++)
 				row.insertCell();
 			insertCell(get_isk_per_lp(offer).toLocaleString());
 		}
@@ -124,6 +125,7 @@ async function update_table() {
 			insertImgCell(offer.type_id, 1);
 			row.insertCell().innerText = names[required_item.type_id];
 			row.insertCell().innerText = required_item.quantity.toLocaleString();
+			row.insertCell().innerText = prices[required_item.type_id].toLocaleString();
 			if (i == 0) {
 				insertCell(get_isk_per_lp(offer).toLocaleString());
 			}
