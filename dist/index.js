@@ -1,7 +1,6 @@
 const corp_select = document.getElementById("corp_select");
 const table = document.getElementById("offers");
 const adjusted_price_checkbox = document.getElementById("adjusted_price");
-const locale = "ru-RU";
 
 const corps = await (await fetch("https://esi.evetech.net/corporations/npccorps")).json();
 /** @type {Array} */
@@ -74,24 +73,24 @@ async function update_table() {
 			cell.rowSpan = rowspan;
 		}
 		insertCell(offer.type_id);
-		insertCell(offer.quantity.toLocaleString(locale));
-		insertCell(offer.lp_cost.toLocaleString(locale));
-		insertCell(offer.isk_cost.toLocaleString(locale));
+		insertCell(offer.quantity.toLocaleString());
+		insertCell(offer.lp_cost.toLocaleString());
+		insertCell(offer.isk_cost.toLocaleString());
 
 		if (offer.required_items.length == 0) {
 			row.insertCell();
 			row.insertCell();
-			insertCell(get_isk_per_lp(offer).toLocaleString(locale));
+			insertCell(get_isk_per_lp(offer).toLocaleString());
 		}
 		offer.required_items.forEach((required_item, i) => {
 			if (i > 0) {
 				table.appendChild(row);
 				row = document.createElement("tr");
 			}
-			row.insertCell().innerText = required_item.type_id.toLocaleString(locale);
-			row.insertCell().innerText = required_item.quantity.toLocaleString(locale);
+			row.insertCell().innerText = required_item.type_id.toLocaleString();
+			row.insertCell().innerText = required_item.quantity.toLocaleString();
 			if (i == 0) {
-				insertCell(get_isk_per_lp(offer).toLocaleString(locale));
+				insertCell(get_isk_per_lp(offer).toLocaleString());
 			}
 		});
 		table.appendChild(row);
