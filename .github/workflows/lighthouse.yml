@@ -6,4 +6,5 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - run: npm install && npm install -g @lhci/cli@0.15.x
+      - run: rm dist/google*.html # remove site verification file
       - run: lhci autorun
