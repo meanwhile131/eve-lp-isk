@@ -93,19 +93,27 @@ async function update_table() {
 	offers.forEach(offer => {
 		let row = document.createElement("tr");
 		let rowspan = Math.max(offer.required_items.length, 1);
+		function insertImgCell(type_id, rowspan) {
+			const img = document.createElement("img");
+			img.src = `https://images.evetech.net/types/${type_id}/icon`;
+			const cell = row.insertCell();
+			cell.appendChild(img);
+			cell.rowSpan = rowspan;
+		}
 		function insertCell(text) {
 			const cell = row.insertCell();
 			cell.innerText = text;
 			cell.rowSpan = rowspan;
 		}
+		insertImgCell(offer.type_id, rowspan);
 		insertCell(names[offer.type_id]);
 		insertCell(offer.quantity.toLocaleString());
 		insertCell(offer.lp_cost.toLocaleString());
 		insertCell(offer.isk_cost.toLocaleString());
 
 		if (offer.required_items.length == 0) {
-			row.insertCell();
-			row.insertCell();
+			for (let i = 0; i < 3; i++)
+				row.insertCell();
 			insertCell(get_isk_per_lp(offer).toLocaleString());
 		}
 		offer.required_items.forEach((required_item, i) => {
@@ -113,6 +121,7 @@ async function update_table() {
 				table.appendChild(row);
 				row = document.createElement("tr");
 			}
+			insertImgCell(offer.type_id, 1);
 			row.insertCell().innerText = names[required_item.type_id];
 			row.insertCell().innerText = required_item.quantity.toLocaleString();
 			if (i == 0) {
