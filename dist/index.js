@@ -30,7 +30,18 @@ corps.forEach(corp_id => {
 	corp_select.appendChild(corp_option);
 });
 
-corp_select.value = localStorage.getItem("corporation");
+if (window.location.hash) {
+	corp_select.value = window.location.hash.slice(1);
+}
+else {
+	corp_select.value = localStorage.getItem("corporation");
+	window.location.hash = corp_select.value;
+}
+
+window.addEventListener("hashchange", () => {
+	corp_select.value = window.location.hash.slice(1);
+	update_table();
+});
 
 /**
  * @typedef {Object} Offer
@@ -56,6 +67,7 @@ function get_isk_per_lp(offer) {
 
 corp_select.addEventListener("change", async e => {
 	localStorage.setItem("corporation", e.target.value);
+	window.location.hash = e.target.value;
 	update_table();
 });
 adjusted_price_checkbox.addEventListener("change", async () => {
