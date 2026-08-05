@@ -54,10 +54,10 @@ window.addEventListener("hashchange", () => {
  */
 /** @param {Offer} offer */
 function get_isk_per_lp(offer) {
-	const result_value = prices[offer.type_id] * offer.quantity;
+	const result_value = (prices[offer.type_id] ?? 0) * offer.quantity;
 	let required_items_value = 0;
 	offer.required_items.forEach(required_item => {
-		const item_value = prices[required_item.type_id] * required_item.quantity;
+		const item_value = (prices[required_item.type_id] ?? Infinity) * required_item.quantity;
 		required_items_value += item_value;
 	});
 	const isk_profit = result_value - required_items_value - offer.isk_cost;
@@ -122,7 +122,7 @@ async function update_table() {
 		insertCell(offer.quantity.toLocaleString());
 		insertCell(offer.lp_cost.toLocaleString());
 		insertCell(offer.isk_cost.toLocaleString());
-		insertCell(prices[offer.type_id].toLocaleString());
+		insertCell((prices[offer.type_id] ?? 0).toLocaleString());
 
 		if (offer.required_items.length == 0) {
 			for (let i = 0; i < 4; i++)
@@ -137,7 +137,7 @@ async function update_table() {
 			insertImgCell(offer.type_id, 1);
 			row.insertCell().innerText = names[required_item.type_id];
 			row.insertCell().innerText = required_item.quantity.toLocaleString();
-			row.insertCell().innerText = prices[required_item.type_id].toLocaleString();
+			row.insertCell().innerText = (prices[required_item.type_id] ?? 0).toLocaleString();
 			if (i == 0) {
 				insertCell(get_isk_per_lp(offer).toLocaleString());
 			}
