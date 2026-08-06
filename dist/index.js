@@ -110,7 +110,7 @@ async function update_table() {
 		function insertImgCell(type_id, rowspan) {
 			const img = document.createElement("img");
 			img.src = `https://images.evetech.net/types/${type_id}/icon`;
-			img.alt = `Icon of ${names[type_id]}`;
+			img.alt = "Item icon";
 			const cell = row.insertCell();
 			cell.appendChild(img);
 			cell.rowSpan = rowspan;
